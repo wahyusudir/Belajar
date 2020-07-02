@@ -1,2 +1,2 @@
 [apache]
-192.168.226.107 ansible_ssh_user=wahyu ansible_python_interpreter=/usr/bin/python3
+ip addr ansible_ssh_user=wahyu ansible_python_interpreter=/usr/bin/python3
