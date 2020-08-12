@@ -1,0 +1,10 @@
+server           = true
+node_name        = "{{ ip_address }}"
+datacenter       = "wahyu-consul"
+data_dir         = "/opt/consul"
+bootstrap_expect = 1
+ui               = true
+enable_syslog    = true
+log_level        = "DEBUG"
+log_file         = "/var/log/consul/consul.log"
+client_addr      = "0.0.0.0"

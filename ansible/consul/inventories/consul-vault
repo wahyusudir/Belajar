@@ -1,0 +1,2 @@
+[consul]
+{{ ip_address }} ansible_ssh_user=wahyu

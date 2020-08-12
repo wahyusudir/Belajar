@@ -1,0 +1,81 @@
+---
+# tasks file for consul-server
+- name: ensure unzip present
+  apt:
+    name: unzip
+    update_cache: yes
+
+- name: get consul zip
+  get_url:
+    dest: "/etc/{{ consul_zip_file }}"
+    url: "https://releases.hashicorp.com/consul/{{ consul_version }}/{{ consul_zip_file }}"
+
+- name: place unzipped consul on path
+  unarchive:
+    src: "/etc/{{ consul_zip_file }}"
+    dest: "{{ consul_install_dir }}"
+    remote_src: yes
+    group: root
+    owner: root
+    creates: usr/local/bin/consul
+
+- name: create group consul
+  group:
+    name: consul1
+    state: present
+
+- name: create user
+  user:
+    name: consul
+    group: consul1
+
+- name: create dir consul data
+  file:
+    path: /var/lib/consul
+    owner: consul
+    group: consul1
+    mode: 0755
+    state: directory
+    recurse: yes
+
+- name: create config directory
+  file:
+    path: /etc/consul.d
+    owner: consul
+    group: consul1
+    state: directory
+
+- name: create folder log consul
+  file:
+    path: /var/log/consul
+    state: directory
+    recurse: yes
+    owner: consul
+    group: consul1
+
+- name: create folder run consul
+  file:
+    path: /var/run/consul
+    state: directory
+    recurse: yes
+    owner: consul
+    group: consul1
+
+- name: send consul configuration file
+  template: 
+    dest: "{{ consul_config_dir }}/config.hcl"
+    src: consul.config.j2
+    owner: consul
+    group: consul1
+    mode: 777
+  notify: restart consul
+
+- name: ensure consul service file exists
+  template:
+    dest: /etc/systemd/system/consul.service
+    src: service_consul.j2
+    force: yes
+    mode: 0644
+    owner: consul
+    group: consul1
+  notify: restart consul

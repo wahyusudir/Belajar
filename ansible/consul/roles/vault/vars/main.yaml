@@ -1,0 +1,2 @@
+vault_version: 1.4.2
+vault_zip_file: vault_{{ vault_version }}_linux_amd64.zip
