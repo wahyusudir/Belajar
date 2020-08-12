@@ -1,0 +1,6 @@
+---
+- hosts: apache
+  gather_facts: no
+  become: yes
+  roles:
+    - roles/apache
