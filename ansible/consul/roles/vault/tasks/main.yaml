@@ -1,0 +1,40 @@
+---
+  - name: Install unzip
+    package:
+      name: unzip
+      update_cache: yes
+
+  - name: Download and install vault binary
+    unarchive:
+      src: "https://releases.hashicorp.com/vault/{{ vault_version }}/{{ vault_zip_file }}"
+      dest: /usr/bin/
+      remote_src: True
+
+  - name: Create vault config directory
+    file: state=directory path=/etc/opt/vault/
+
+  - name: Create vault service directory
+    file: state=directory path=/usr/lib/systemd/system/
+
+  - name: Copy vault config to server
+    copy: src=vaultconfig.hcl dest=/etc/opt/vault/
+
+  - name: Copy vault service to server
+    copy: src=vault.service dest=/usr/lib/systemd/system/vault.service
+
+  - name: Start vault service
+    systemd:
+      state: started
+      name: vault
+      daemon_reload: yes
+
+  - pause:
+      seconds: 15
+
+  - name: Initialize the vault
+    command: vault operator init
+    register: keys
+    environment:
+      VAULT_ADDR: "https://192.168.226.107:8200"
+
+  - debug: msg="{{ keys }}"
