@@ -1,2 +1,0 @@
-[apache]
-ip addr ansible_ssh_user=wahyu ansible_python_interpreter=/usr/bin/python3
